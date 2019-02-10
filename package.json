@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "main": "index.js",
     "scripts": {
-        "start:dev": "export NODE_TLS_REJECT_UNAUTHORIZED=1 && nodemon index.js",
+        "start:dev": "export NODE_ENV=development && export NODE_TLS_REJECT_UNAUTHORIZED=1 && nodemon index.js",
         "start": "export NODE_TLS_REJECT_UNAUTHORIZED=1 && node index.js"
     },
     "author": "",
