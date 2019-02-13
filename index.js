@@ -59,7 +59,7 @@ app.get('/api/graphql/restaurants', (req, res) => {
       res.send(result.data.data.search.business);
     })
     .catch(err => {
-      logger.error('GET/api/graphql/restaurants ', err.response.data.error.code);
+      logger.error('GET/api/graphql/restaurants ', err.response.data.error);
     });
 });
 
@@ -92,7 +92,7 @@ app.get('/api/restaurants', (req, res) => {
       res.send(result.data.businesses);
     })
     .catch(err => {
-      logger.error('GET/api/restaurants ', err.response.data.error.code);
+      logger.error('GET/api/restaurants ', err.response.data.error);
     });
 });
 
