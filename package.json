@@ -1,21 +1,31 @@
 {
-    "name": "lunch-roulette-server",
-    "version": "1.0.0",
-    "main": "index.js",
-    "scripts": {
-        "start:dev": "export NODE_ENV=development && export NODE_TLS_REJECT_UNAUTHORIZED=1 && nodemon index.js",
-        "start": "export NODE_TLS_REJECT_UNAUTHORIZED=1 && node index.js"
-    },
-    "author": "",
-    "license": "ISC",
-    "dependencies": {
-        "axios": "^0.18.0",
-        "cors": "^2.8.5",
-        "express": "^4.16.4",
-        "nodemon": "^1.18.10"
-    },
-    "engines": {
-        "node": ">=10.0.0",
-        "npm": ">=6.4.0"
-    }
+  "name": "lunch-roulette-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start:dev": "export NODE_ENV=development && nodemon index.js",
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "cors": "^2.8.5",
+    "express": "^4.16.4",
+    "nodemon": "^1.18.10",
+    "winston": "^3.2.1"
+  },
+  "engines": {
+    "node": ">=10.0.0",
+    "npm": ">=6.4.0"
+  },
+  "devDependencies": {
+    "eslint": "^5.3.0",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-prettier": "^4.0.0",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-jsx-a11y": "^6.2.1",
+    "eslint-plugin-prettier": "^3.0.1",
+    "prettier": "^1.16.4"
+  }
 }
