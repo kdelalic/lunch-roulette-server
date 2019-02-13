@@ -1,31 +1,47 @@
-const express = require("express");
-const axios = require("axios");
+const express = require('express');
+const { createLogger, format, transports } = require('winston');
+const axios = require('axios');
+const cors = require('cors');
+
 const app = express();
-const cors = require("cors");
 const port = process.env.PORT || 5000;
+const { YELP_API_KEY, NODE_ENV, SERVER_ORIGIN, LOGGER_LEVEL } = process.env;
+
+const logger = createLogger({
+  level: LOGGER_LEVEL || 'info',
+  levels: { error: 0, warn: 1, query: 2, info: 3, verbose: 4, debug: 5 },
+  format: format.simple(),
+  transports: [new transports.Console()]
+});
+
+if (!YELP_API_KEY) {
+  logger.error('YELP_API_KEY is not set. Program stopping.');
+  process.exit(0);
+}
 
 const corsOptions = {
-    corsOptions: process.env.NODE_ENV === "production" ? process.env.SERVER_ORIGIN : "http://localhost:3000",
-    optionsSuccessStatus: 200
+  corsOptions: NODE_ENV === 'production' ? SERVER_ORIGIN : 'http://localhost:3000',
+  optionsSuccessStatus: 200
 };
 
 app.use(cors(corsOptions));
 
-app.get("/api/graphql/restaurants", (req, res) => {
-    const latitude = req.query.latitude;
-    const longitude = req.query.longitude;
-    const offset = req.query.offset;
-    const limit = req.query.limit;
+app.get('/api/graphql/restaurants', (req, res) => {
+  const { latitude, longitude, offset, limit } = req.query;
 
-    axios({
-        url: "https://api.yelp.com/v3/graphql",
-        method: "post",
-        headers: {
-            Authorization:
-                "Bearer tKcIaEyXmxDUFrtM3EYISnLxsI22snBqDH9x6yTAXnB_ZhAz-DB_k4BzIJGlcm9-EFO94wQVxQRuqFZp0M_I8EoDFDHlYXGeXmHD44Sk6LSM1LfUlfAu8ZInwk78W3Yx",
-            "Content-Type": "application/graphql"
-        },
-        data: `{
+  logger.query(
+    `{latitude: ${latitude}, longitude: ${longitude}, offset: ${offset}, limit: ${limit}} from ${
+      req.headers.origin
+    } (${req.headers['user-agent']})`
+  );
+
+  axios({
+    url: 'https://api.yelp.com/v3/graphql',
+    method: 'post',
+    headers: {
+      Authorization: YELP_API_KEY
+    },
+    data: `{
         search(term: "restaurants", latitude: ${latitude}, longitude: ${longitude}, limit: ${limit}, offset: ${offset}) {
           business {
             name
@@ -38,46 +54,46 @@ app.get("/api/graphql/restaurants", (req, res) => {
           }
         }
       }`
+  })
+    .then(result => {
+      res.send(result.data.data.search.business);
     })
-        .then(result => {
-            res.send(result.data.data.search.business);
-        })
-        .catch(err => {
-            console.log("GET/api/graphql/restaurants " + err);
-        });
+    .catch(err => {
+      logger.error('GET/api/graphql/restaurants ', err.response.data.error.code);
+    });
 });
 
-app.get("/api/restaurants", (req, res) => {
-    const term = "restaurants";
-    const latitude = req.query.latitude;
-    const longitude = req.query.longitude;
-    const offset = req.query.offset;
-    const limit = req.query.limit;
+app.get('/api/restaurants', (req, res) => {
+  const { latitude, longitude, offset, limit } = req.query;
+  const term = 'restaurants';
 
-    const url =
-        `https://api.yelp.com/v3/businesses/search` +
-        `?term=${term}` +
-        `&latitude=${latitude}` +
-        `&longitude=${longitude}` +
-        `&offset=${offset}` +
-        `&limit=${limit}`;
+  logger.query(
+    `{latitude: ${latitude}, longitude: ${longitude}, offset: ${offset}, limit: ${limit}} from ${
+      req.headers.origin
+    } (${req.headers['user-agent']})`
+  );
 
-    console.log(url);
+  const url =
+    `https://api.yelp.com/v3/businesses/search` +
+    `?term=${term}` +
+    `&latitude=${latitude}` +
+    `&longitude=${longitude}` +
+    `&offset=${offset}` +
+    `&limit=${limit}`;
 
-    axios({
-        url: url,
-        method: "get",
-        headers: {
-            Authorization:
-                "Bearer tKcIaEyXmxDUFrtM3EYISnLxsI22snBqDH9x6yTAXnB_ZhAz-DB_k4BzIJGlcm9-EFO94wQVxQRuqFZp0M_I8EoDFDHlYXGeXmHD44Sk6LSM1LfUlfAu8ZInwk78W3Yx"
-        }
+  axios({
+    url,
+    method: 'get',
+    headers: {
+      Authorization: YELP_API_KEY
+    }
+  })
+    .then(result => {
+      res.send(result.data.businesses);
     })
-        .then(result => {
-            res.send(result.data.businesses);
-        })
-        .catch(err => {
-            console.log("GET/api/restaurants " + err);
-        });
+    .catch(err => {
+      logger.error('GET/api/restaurants ', err.response.data.error.code);
+    });
 });
 
-app.listen(port, () => console.log(`Server listening on port ${port}!`));
+app.listen(port, () => logger.info(`Server is listening on port ${port}.`));
