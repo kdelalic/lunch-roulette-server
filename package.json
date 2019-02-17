@@ -5,8 +5,9 @@
   "scripts": {
     "build": "tsc",
     "dev": "ts-node ./src/server.ts",
-    "start": "nodemon ./build/server.js",
-    "prod": "npm run build && npm run start"
+    "start": "node ./build/server.js",
+    "prod": "npm run build && npm run start",
+    "heroku-postbuild": "npm run build"
   },
   "author": "",
   "license": "ISC",
