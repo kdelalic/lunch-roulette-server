@@ -3,11 +3,7 @@ import { Request, Response } from 'express';
 import { Config } from '../config';
 
 export class Routes {
-  private log;
-
   public routes(app): void {
-    this.log = app.log;
-
     app.route('/').get((req: Request, res: Response) => {
       res.status(200).send({
         message: 'GET request successfulll!!!!'
@@ -17,7 +13,7 @@ export class Routes {
     app.route('/api/graphql/restaurants').get((req: Request, res: Response) => {
       const { latitude, longitude, offset, limit } = req.query;
 
-      this.log.trace(
+      app.trace(
         `{latitude: ${latitude}, longitude: ${longitude}, offset: ${offset}, limit: ${limit}}
          from ${req.headers.origin} (${req.headers['user-agent']})`
       );
@@ -54,11 +50,11 @@ export class Routes {
         .catch((error: AxiosError) => {
           if (error.response) {
             const { code, description } = error.response.data.error;
-            this.log.error(`${error.response.status} ${code} ${description}`);
+            app.error(`${error.response.status} ${code} ${description}`);
           } else if (error.request) {
-            this.log.error(error.request);
+            app.error(error.request);
           } else {
-            this.log.error(error.message);
+            app.error(error.message);
           }
         });
     });
@@ -67,7 +63,7 @@ export class Routes {
       const { latitude, longitude, offset, limit } = req.query;
       const term = 'restaurants';
 
-      this.log.trace(
+      app.trace(
         `{latitude: ${latitude}, longitude: ${longitude}, offset: ${offset}, limit: ${limit}}
          from ${req.headers.origin} (${req.headers['user-agent']})`
       );
@@ -91,11 +87,11 @@ export class Routes {
         .catch((error: AxiosError) => {
           if (error.response) {
             const { code, description } = error.response.data.error;
-            this.log.error(`${error.response.status} ${code} ${description}`);
+            app.error(`${error.response.status} ${code} ${description}`);
           } else if (error.request) {
-            this.log.error(error.request);
+            app.error(error.request);
           } else {
-            this.log.error(error.message);
+            app.error(error.message);
           }
         });
     });
