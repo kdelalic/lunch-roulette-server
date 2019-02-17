@@ -1,4 +1,5 @@
 import * as bodyParser from 'body-parser';
+import * as cors from 'cors';
 import * as express from 'express';
 import { Config } from './config';
 import { Routes } from './routes';
@@ -25,6 +26,8 @@ class App {
 
     // support application/json type post data
     this.app.use(bodyParser.json());
+
+    this.app.use(cors(Config.CORS_OPTIONS));
 
     // support application/x-www-form-urlencoded post data
     this.app.use(bodyParser.urlencoded({ extended: false }));
