@@ -16,7 +16,7 @@ class App {
     // Runs application configuration
     this.config();
     // Initializes routes
-    this.routePrv.routes(this.app);
+    this.routePrv.routes(this.app, this.log);
   }
 
   // Configures the express application

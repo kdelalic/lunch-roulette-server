@@ -5,16 +5,17 @@ import { Config } from '../config';
 export class Routes {
   private readonly YELP_API_KEY: string = Config.YELP_API_KEY;
 
-  public routes(app): void {
+  public routes(app, log): void {
     // Route for REST Yelp restaurants api
     app.route('/api/restaurants').get((req: Request, res: Response) => {
       const { latitude, longitude, offset, limit } = req.query;
       const term = 'restaurants'; // Search term
 
       // Log request
-      app.trace(
-        `{latitude: ${latitude}, longitude: ${longitude}, offset: ${offset}, limit: ${limit}}
-         from ${req.headers.origin} (${req.headers['user-agent']})`
+      log.trace(
+        `{latitude: ${latitude}, longitude: ${longitude}, offset: ${offset}, limit: ${limit}} from ${
+          req.headers.origin
+        } (${req.headers['user-agent']})`
       );
 
       // Call GET request to yelp api
@@ -29,7 +30,8 @@ export class Routes {
           `&latitude=${latitude}` +
           `&longitude=${longitude}` +
           `&offset=${offset}` +
-          `&limit=${limit}`
+          `&limit=${limit}` +
+          '&radius=5000'
       })
         .then((result: AxiosResponse) => {
           // Return response back to our API
@@ -39,11 +41,11 @@ export class Routes {
           // Handle error
           if (error.response) {
             const { code, description } = error.response.data.error;
-            app.error(`${error.response.status} ${code} ${description}`);
+            log.error(`${error.response.status} ${code} ${description}`);
           } else if (error.request) {
-            app.error(error.request);
+            log.error(error.request);
           } else {
-            app.error(error.message);
+            log.error(error.message);
           }
         });
     });
@@ -54,7 +56,7 @@ export class Routes {
       const term = 'restaurants';
 
       // Log request
-      app.trace(
+      log.trace(
         `{latitude: ${latitude}, longitude: ${longitude}, offset: ${offset}, limit: ${limit}}
          from ${req.headers.origin} (${req.headers['user-agent']})`
       );
@@ -94,11 +96,11 @@ export class Routes {
           // Handle error
           if (error.response) {
             const { code, description } = error.response.data.error;
-            app.error(`${error.response.status} ${code} ${description}`);
+            log.error(`${error.response.status} ${code} ${description}`);
           } else if (error.request) {
-            app.error(error.request);
+            log.error(error.request);
           } else {
-            app.error(error.message);
+            log.error(error.message);
           }
         });
     });
