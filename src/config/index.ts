@@ -6,7 +6,7 @@ export class Config {
   public static DEVELOPMENT_MODE: boolean = process.env.NODE_ENV !== 'production';
 
   // Highest logger level to use
-  public static LOGGER_LEVEL: string = process.env.LOGGER_LEVEL || 'info';
+  public static LOGGER_LEVEL: string = process.env.LOGGER_LEVEL || 'trace';
 
   // Logger levels to use
   public static LOGGER_LEVELS = { error: 0, warn: 1, info: 2, trace: 3, debug: 4 };
