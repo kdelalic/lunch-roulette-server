@@ -17,7 +17,7 @@ export class Routes {
       const term = 'restaurants'; // Search term
 
       // Log request
-      this.log.trace(
+      this.log.verbose(
         `{latitude: ${latitude}, longitude: ${longitude}, offset: ${offset}, limit: ${limit}} from ${
           req.headers.origin
         } (${req.headers['user-agent']})`
@@ -39,7 +39,7 @@ export class Routes {
           '&radius=5000'
       })
         .then((result: AxiosResponse) => {
-          this.log.trace(`GET/api/restaurants response: ${result.data}`);
+          this.log.verbose(`GET/api/restaurants response: ${result.data}`);
 
           // Return response back to our API
           res.send(result.data.businesses);
@@ -55,7 +55,7 @@ export class Routes {
       const term = 'restaurants';
 
       // Log request
-      this.log.trace(
+      this.log.verbose(
         `{latitude: ${latitude}, longitude: ${longitude}, offset: ${offset}, limit: ${limit}}
          from ${req.headers.origin} (${req.headers['user-agent']})`
       );
@@ -88,7 +88,7 @@ export class Routes {
         url: 'https://api.yelp.com/v3/graphql'
       })
         .then((result: AxiosResponse) => {
-          this.log.trace(`GET/api/restaurants response: ${result.data}`);
+          this.log.verbose(`GraphQL GET/api/restaurants response: ${result.data}`);
 
           // Return response back to our API
           res.send(result.data.data.search.business);
@@ -103,7 +103,7 @@ export class Routes {
       const { restaurant_id } = req.params;
 
       // Log request
-      this.log.trace(
+      this.log.verbose(
         `{restaurant_id: ${restaurant_id}, from ${req.headers.origin} (${
           req.headers['user-agent']
         })`
@@ -118,7 +118,7 @@ export class Routes {
         url: `https://api.yelp.com/v3/businesses/${restaurant_id}/reviews`
       })
         .then((result: AxiosResponse) => {
-          this.log.info(result.data);
+          this.log.verbose(`GET/api/reviews/ response: ${result.data}`);
 
           // Return response back to our API
           res.send(result.data);

@@ -5,32 +5,36 @@ import { LoggerInterface } from '../models/loggerInterface';
 export default class Logger implements LoggerInterface {
   private logger;
 
+  private messageFormat = format.printf(({ level, message }) => {
+    return `[${level}] ${message}`;
+  });
+
   constructor() {
     this.logger = createLogger({
-      format: format.simple(),
+      format: this.messageFormat,
       level: Config.LOGGER_LEVEL,
       levels: Config.LOGGER_LEVELS,
       transports: [new transports.Console()]
     });
   }
 
-  public error(message: string, ...supportingData: any[]): void {
-    this.logger.error(message, supportingData);
+  public error(message: string): void {
+    this.logger.error(message);
   }
 
-  public warn(message: string, ...supportingData: any[]): void {
-    this.logger.warn(message, supportingData);
+  public warn(message: string): void {
+    this.logger.warn(message);
   }
 
-  public info(message: string, ...supportingData: any[]): void {
-    this.logger.info(message, supportingData);
+  public info(message: string): void {
+    this.logger.info(message);
   }
 
-  public trace(message: string, ...supportingData: any[]): void {
-    this.logger.trace(message, supportingData);
+  public verbose(message: string): void {
+    this.logger.verbose(message);
   }
 
-  public debug(message: string, ...supportingData: any[]): void {
-    this.logger.debug(message, supportingData);
+  public debug(message: string): void {
+    this.logger.debug(message);
   }
 }
