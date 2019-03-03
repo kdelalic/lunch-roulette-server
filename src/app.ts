@@ -7,22 +7,27 @@ import logger from './utils/logger';
 
 class App {
   public app: express.Application;
-  public routePrv: Routes = new Routes();
+  public routePrv: Routes;
   private log;
 
   constructor() {
     // Creates new express app
     this.app = express();
+
     // Runs application configuration
     this.config();
+
     // Initializes routes
-    this.routePrv.routes(this.app, this.log);
+    this.routePrv.routes(this.app);
   }
 
   // Configures the express application
   private config(): void {
     // Initializes logger
     this.log = new logger();
+
+    // Pass logger to routes
+    this.routePrv = new Routes(this.log);
 
     // Checks if Yelp api key is present in environment
     if (!Config.YELP_API_KEY) {
