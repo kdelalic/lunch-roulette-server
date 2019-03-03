@@ -6,10 +6,10 @@ export class Config {
   public static DEVELOPMENT_MODE: boolean = process.env.NODE_ENV !== 'production';
 
   // Highest logger level to use
-  public static LOGGER_LEVEL: string = process.env.LOGGER_LEVEL || 'trace';
+  public static LOGGER_LEVEL: string = process.env.LOGGER_LEVEL || 'info';
 
   // Logger levels to use
-  public static LOGGER_LEVELS = { error: 0, warn: 1, info: 2, trace: 3, debug: 4 };
+  public static LOGGER_LEVELS = { error: 0, warn: 1, info: 2, verbose: 3, debug: 4 };
 
   // Port which server is hosted on
   public static PORT = process.env.PORT || 5000;
