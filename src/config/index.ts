@@ -11,6 +11,9 @@ export class Config {
   // Logger levels to use
   public static LOGGER_LEVELS = { error: 0, warn: 1, info: 2, verbose: 3, debug: 4 };
 
+  // Maximum radius
+  public static MAXIMUM_RADIUS: number = 10000;
+
   // Port which server is hosted on
   public static PORT = process.env.PORT || 5000;
 
