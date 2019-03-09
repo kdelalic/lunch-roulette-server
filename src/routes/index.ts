@@ -4,6 +4,7 @@ import { Config } from '../config';
 
 export class Routes {
   private readonly YELP_API_KEY: string = Config.YELP_API_KEY;
+  private readonly MAXIMUM_RADIUS: number = Config.MAXIMUM_RADIUS;
   private log;
 
   constructor(log) {
@@ -13,12 +14,16 @@ export class Routes {
   public routes(app): void {
     // REST Yelp GET restaurants search api
     app.route('/api/restaurants').get((req: Request, res: Response) => {
-      const { latitude, longitude, offset, limit } = req.query;
+      const { latitude, longitude, offset, limit, radius } = req.query;
       const term = 'restaurants'; // Search term
+
+      if (radius > this.MAXIMUM_RADIUS) {
+        res.status(400).send({ error: `Radius must be at most ${this.MAXIMUM_RADIUS}` });
+      }
 
       // Log request
       this.log.verbose(
-        `{latitude: ${latitude}, longitude: ${longitude}, offset: ${offset}, limit: ${limit}} from ${
+        `{latitude: ${latitude}, longitude: ${longitude}, offset: ${offset}, limit: ${limit}, radius: ${radius}} from ${
           req.headers.origin
         } (${req.headers['user-agent']})`
       );
@@ -36,7 +41,7 @@ export class Routes {
           `&longitude=${longitude}` +
           `&offset=${offset}` +
           `&limit=${limit}` +
-          '&radius=5000'
+          `&radius=${radius}`
       })
         .then((result: AxiosResponse) => {
           this.log.verbose(`GET/api/restaurants response: ${result.data}`);
@@ -51,12 +56,16 @@ export class Routes {
 
     // GraphQL Yelp GET restaurants search api
     app.route('/api/graphql/restaurants').get((req: Request, res: Response) => {
-      const { latitude, longitude, offset, limit } = req.query;
+      const { latitude, longitude, offset, limit, radius } = req.query;
       const term = 'restaurants';
+
+      if (radius > this.MAXIMUM_RADIUS) {
+        res.status(400).send({ error: `Radius must be at most ${this.MAXIMUM_RADIUS}` });
+      }
 
       // Log request
       this.log.verbose(
-        `{latitude: ${latitude}, longitude: ${longitude}, offset: ${offset}, limit: ${limit}}
+        `{latitude: ${latitude}, longitude: ${longitude}, offset: ${offset}, limit: ${limit}, radius: ${radius}}
          from ${req.headers.origin} (${req.headers['user-agent']})`
       );
 
@@ -68,7 +77,8 @@ export class Routes {
             latitude: ${latitude},
             longitude: ${longitude},
             limit: ${limit},
-            offset: ${offset}
+            offset: ${offset},
+            radius: ${radius}
           ) {
             business {
               name
