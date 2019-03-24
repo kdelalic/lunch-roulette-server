@@ -5,6 +5,7 @@ import { Config } from '../config';
 export class Routes {
   private readonly YELP_API_KEY: string = Config.YELP_API_KEY;
   private readonly MAXIMUM_RADIUS: number = Config.MAXIMUM_RADIUS;
+  private readonly DEFAULT_SEARCH_TERM: string = Config.DEFAULT_SEARCH_TERM;
   private log;
 
   constructor(log) {
@@ -14,8 +15,14 @@ export class Routes {
   public routes(app): void {
     // REST Yelp GET restaurants search api
     app.route('/api/restaurants').get((req: Request, res: Response) => {
-      const { latitude, longitude, offset, limit, radius } = req.query;
-      const term = 'restaurants'; // Search term
+      const {
+        latitude,
+        longitude,
+        offset,
+        limit,
+        radius,
+        term = this.DEFAULT_SEARCH_TERM
+      } = req.query;
 
       if (radius > this.MAXIMUM_RADIUS) {
         res.status(400).send({ error: `Radius must be at most ${this.MAXIMUM_RADIUS}` });
@@ -56,8 +63,14 @@ export class Routes {
 
     // GraphQL Yelp GET restaurants search api
     app.route('/api/graphql/restaurants').get((req: Request, res: Response) => {
-      const { latitude, longitude, offset, limit, radius } = req.query;
-      const term = 'restaurants';
+      const {
+        latitude,
+        longitude,
+        offset,
+        limit,
+        radius,
+        term = this.DEFAULT_SEARCH_TERM
+      } = req.query;
 
       if (radius > this.MAXIMUM_RADIUS) {
         res.status(400).send({ error: `Radius must be at most ${this.MAXIMUM_RADIUS}` });

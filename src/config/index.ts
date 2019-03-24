@@ -17,6 +17,9 @@ export class Config {
   // Port which server is hosted on
   public static PORT = process.env.PORT || 5000;
 
+  // Default search term for search api
+  public static DEFAULT_SEARCH_TERM: string = 'restaurant';
+
   // CORS options for allowing only access from specific IPs
   public static CORS_OPTIONS = {
     corsOptions:
