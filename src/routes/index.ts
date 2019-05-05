@@ -30,9 +30,8 @@ export class Routes {
 
       // Log request
       this.log.verbose(
-        `{latitude: ${latitude}, longitude: ${longitude}, offset: ${offset}, limit: ${limit}, radius: ${radius}} from ${
-          req.headers.origin
-        } (${req.headers['user-agent']})`
+        `{latitude: ${latitude}, longitude: ${longitude}, offset: ${offset}, limit: ${limit}, radius: ${radius}}, ` +
+          `term: ${term} from ${req.headers.origin} (${req.headers['user-agent']})`
       );
 
       // Call GET request to yelp api
@@ -78,8 +77,8 @@ export class Routes {
 
       // Log request
       this.log.verbose(
-        `{latitude: ${latitude}, longitude: ${longitude}, offset: ${offset}, limit: ${limit}, radius: ${radius}}
-         from ${req.headers.origin} (${req.headers['user-agent']})`
+        `{latitude: ${latitude}, longitude: ${longitude}, offset: ${offset}, limit: ${limit}, radius: ${radius}}, ` +
+          `term: ${term} from ${req.headers.origin} (${req.headers['user-agent']})`
       );
 
       // Call GET request to Yelp GraphQL API
